@@ -1,0 +1,9 @@
+# macOS metadata
+.DS_Store
+._*
+
+# Backup originals
+*-original.*
+
+# Claude local config
+.claude/
