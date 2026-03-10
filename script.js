@@ -556,8 +556,7 @@ document.querySelectorAll('a[href^="tel:"]').forEach(link => {
         var link = e.target.closest('[data-open-modal="contact"]');
         if (link) {
             e.preventDefault();
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            openModal();
         }
     });
 
@@ -581,8 +580,23 @@ document.querySelectorAll('a[href^="tel:"]').forEach(link => {
         }
     });
 
+    function openModal() {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
     function closeModal() {
         modal.classList.remove('active');
         document.body.style.overflow = '';
+    }
+
+    // Auto-popup after 10 seconds, once per visit
+    if (!sessionStorage.getItem('modalShown')) {
+        setTimeout(function() {
+            if (!modal.classList.contains('active')) {
+                openModal();
+                sessionStorage.setItem('modalShown', 'true');
+            }
+        }, 10000);
     }
 })();
