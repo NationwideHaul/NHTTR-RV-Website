@@ -543,3 +543,46 @@ document.querySelectorAll('a[href^="tel:"]').forEach(link => {
         trackEvent('Contact', 'Phone Click', this.getAttribute('href'));
     });
 });
+
+/**
+ * Contact Modal
+ */
+(function() {
+    var modal = document.getElementById('contactModal');
+    if (!modal) return;
+
+    // Open modal on any schedule service link click
+    document.addEventListener('click', function(e) {
+        var link = e.target.closest('[data-open-modal="contact"]');
+        if (link) {
+            e.preventDefault();
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    });
+
+    // Close modal on overlay click
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Close modal on close button
+    var closeBtn = modal.querySelector('.modal-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+})();
