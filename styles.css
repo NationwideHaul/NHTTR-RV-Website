@@ -3301,3 +3301,30 @@ address {
         padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
     }
 }
+
+/* Form AJAX Messages */
+.form-msg {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.form-msg-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.form-msg-error {
+    background: #fbe9e7;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.form-msg-error a {
+    color: #c62828;
+    font-weight: 700;
+    text-decoration: underline;
+}

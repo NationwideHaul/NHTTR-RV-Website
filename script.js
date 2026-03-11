@@ -453,23 +453,70 @@ function initPhotoSlider() {
 }
 
 /**
- * Form validation helper (for future use)
+ * AJAX Form Submission for FormSubmit.co
  */
-function validateForm(form) {
-    const requiredFields = form.querySelectorAll('[required]');
-    let isValid = true;
+(function() {
+    document.addEventListener('submit', function(e) {
+        var form = e.target.closest('form.contact-form');
+        if (!form) return;
+        e.preventDefault();
 
-    requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-            isValid = false;
-            field.classList.add('error');
-        } else {
-            field.classList.remove('error');
+        var btn = form.querySelector('.contact-form-submit');
+        var originalText = btn ? btn.innerHTML : '';
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = 'Sending...';
         }
+
+        // Remove any existing messages
+        var old = form.querySelector('.form-msg');
+        if (old) old.remove();
+
+        var data = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: data,
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(function(res) {
+            if (!res.ok) throw new Error('Server error');
+            return res.json();
+        })
+        .then(function() {
+            form.reset();
+            showMsg(form, 'success', 'Thank you! Your message has been sent. We\'ll get back to you shortly.');
+            // Auto-close modal if form is inside one
+            var modal = form.closest('.modal');
+            if (modal) {
+                setTimeout(function() {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }, 3000);
+            }
+        })
+        .catch(function() {
+            showMsg(form, 'error', 'Something went wrong. Please call us at <a href="tel:8637744570">(863) 774-4570</a> instead.');
+        })
+        .finally(function() {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
     });
 
-    return isValid;
-}
+    function showMsg(form, type, html) {
+        var div = document.createElement('div');
+        div.className = 'form-msg form-msg-' + type;
+        div.innerHTML = html;
+        form.appendChild(div);
+    }
+})();
+
+/**
+ * Phone number formatting helper
+ */
 
 /**
  * Phone number formatting helper
