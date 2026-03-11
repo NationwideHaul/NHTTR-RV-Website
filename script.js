@@ -473,8 +473,12 @@ function initPhotoSlider() {
         if (old) old.remove();
 
         var data = new FormData(form);
+        data.delete('_captcha'); // Captcha incompatible with AJAX
 
-        fetch(form.action, {
+        // FormSubmit.co requires /ajax/ endpoint for JSON responses
+        var ajaxUrl = form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+        fetch(ajaxUrl, {
             method: 'POST',
             body: data,
             headers: { 'Accept': 'application/json' }
