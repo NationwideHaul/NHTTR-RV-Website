@@ -38,7 +38,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Preload hero background image for faster LCP -->
-    <link rel="preload" as="image" href="white-camper-motion-road-travel-speed-adventure-lifestyle.jpg">
+    <link rel="preload" as="image" href="white-camper-motion-road-travel-speed-adventure-lifestyle.jpg" fetchpriority="high">
 
     <link rel="stylesheet" href="styles.css">
 
@@ -46,14 +46,19 @@
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "AutoRepair",
-        "name": "Nationwide Haul - RV & Bus Repair",
-        "image": "https://nationwidehauldealer.com/DSC00719.jpg",
-        "url": "https://nationwidehauldealer.com/",
-        "description": "Expert RV and commercial bus repair in Lakeland, FL. Certified technicians, large bay facility, warranty-friendly service.",
+        "@type": ["AutoRepair", "LocalBusiness"],
+        "additionalType": "https://schema.org/ServiceAreaBusiness",
+        "name": "Nationwide Haul RV and Bus Repair",
+        "image": [
+            "https://nhrvrepair.com/DSC00719.jpg",
+            "https://nhrvrepair.com/DSC00703.jpg",
+            "https://nhrvrepair.com/NH Black.png"
+        ],
+        "url": "https://nhrvrepair.com/",
+        "description": "Lakeland's expert RV and commercial bus repair shop. ASE Master Certified technicians, large bay facility, diesel pusher service, warranty-friendly repairs, and 24/7 RV roadside assistance across Central Florida.",
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "5021 Frontage Road N.",
+            "streetAddress": "5021 Frontage Road N",
             "addressLocality": "Lakeland",
             "addressRegion": "FL",
             "postalCode": "33810",
@@ -75,15 +80,100 @@
             }
         ],
         "priceRange": "$$",
-        "areaServed": {
-            "@type": "GeoCircle",
-            "geoMidpoint": {
-                "@type": "GeoCoordinates",
-                "latitude": 28.037644,
-                "longitude": -82.049408
+        "currenciesAccepted": "USD",
+        "paymentAccepted": "Cash, Credit Card, Debit Card",
+        "areaServed": [
+            {
+                "@type": "City",
+                "name": "Lakeland",
+                "sameAs": "https://en.wikipedia.org/wiki/Lakeland,_Florida"
             },
-            "geoRadius": "80000"
-        }
+            {
+                "@type": "City",
+                "name": "Tampa",
+                "sameAs": "https://en.wikipedia.org/wiki/Tampa,_Florida"
+            },
+            {
+                "@type": "City",
+                "name": "Orlando",
+                "sameAs": "https://en.wikipedia.org/wiki/Orlando,_Florida"
+            },
+            {
+                "@type": "AdministrativeArea",
+                "name": "Polk County",
+                "sameAs": "https://en.wikipedia.org/wiki/Polk_County,_Florida"
+            },
+            {
+                "@type": "City",
+                "name": "Winter Haven"
+            },
+            {
+                "@type": "City",
+                "name": "Plant City"
+            },
+            {
+                "@type": "City",
+                "name": "Kissimmee"
+            }
+        ],
+        "parentOrganization": {
+            "@type": "Organization",
+            "name": "Nationwide Haul",
+            "url": "https://www.nationwidehaul.com"
+        },
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "RV and Bus Repair Services",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "RV Roof Repair & Sealing"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Diesel Pusher Engine Service"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "RV Generator Repair (Onan)"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "DOT Safety Inspections"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "RV Roadside Assistance"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Bus Repair & Fleet Service"
+                    }
+                }
+            ]
+        },
+        "sameAs": [
+            "https://www.facebook.com/nationwidehaul/",
+            "https://www.linkedin.com/company/nationwidehaul/",
+            "https://www.youtube.com/@NationwideHaul"
+        ]
     }
     </script>
 </head>
@@ -929,7 +1019,7 @@
                 <!-- Company Info -->
                 <div class="footer-brand">
                     <a href="index.html" class="footer-logo">
-                        <img src="NH Black.png" alt="Nationwide Haul RV and Bus Repair" class="footer-logo-img">
+                        <img src="NH Black.png" alt="Nationwide Haul RV and Bus Repair" class="footer-logo-img" loading="lazy">
                     </a>
                     <p class="footer-description">Central Florida's trusted RV and commercial bus repair center. White-glove service for RV owners and bus fleet managers with certified technicians and mobile roadside support.</p>
                     <div class="footer-social">
