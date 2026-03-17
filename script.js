@@ -500,7 +500,7 @@ function initPhotoSlider() {
             }
         })
         .catch(function() {
-            showMsg(form, 'error', 'Something went wrong. Please call us at <a href="tel:8637744570">(863) 774-4570</a> instead.');
+            showMsg(form, 'error', 'Something went wrong. Please call us at <a href="tel:8634348893">(863) 434-8893</a> instead.');
         })
         .finally(function() {
             if (btn) {
