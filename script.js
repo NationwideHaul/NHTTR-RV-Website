@@ -453,7 +453,82 @@ function initPhotoSlider() {
 }
 
 /**
- * AJAX Form Submission for FormSubmit.co
+ * Lead form anti-spam (shared with the other NH websites).
+ * - Stamps each form's load time for the server-side 3-second time-trap.
+ * - Renders a visible Cloudflare Turnstile "Verify you are human" checkbox
+ *   above the submit button of every lead form (including the modal).
+ * - nhLeadPayload(form) builds the JSON body for /api/notify.
+ */
+var TURNSTILE_SITE_KEY = '0x4AAAAAAFBTKfeX11nL_Euf';
+var _nhLeadTs = new WeakMap();
+
+(function initLeadFormProtection() {
+    var forms = document.querySelectorAll('form.contact-form');
+    if (!forms.length) return;
+    forms.forEach(function(form) { form.dataset.loadedAt = String(Date.now()); });
+    if (!TURNSTILE_SITE_KEY) return;
+
+    function renderWidget(form) {
+        if (_nhLeadTs.has(form) || !window.turnstile) return;
+        var btn = form.querySelector('button[type="submit"], .contact-form-submit');
+        var holder = document.createElement('div');
+        holder.className = 'lead-form-captcha';
+        holder.style.margin = '0 0 12px';
+        if (btn) btn.parentNode.insertBefore(holder, btn); else form.appendChild(holder);
+        _nhLeadTs.set(form, window.turnstile.render(holder, {
+            sitekey: TURNSTILE_SITE_KEY,
+            size: 'flexible',
+            appearance: 'always'
+        }));
+    }
+
+    window.onNhTurnstileLoad = function() { forms.forEach(renderWidget); };
+    var s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onNhTurnstileLoad';
+    s.async = true; s.defer = true;
+    document.head.appendChild(s);
+})();
+
+// Returns the JSON payload for /api/notify, or null when the Turnstile
+// checkbox is present but not yet checked.
+function nhLeadPayload(form) {
+    var payload = {};
+    new FormData(form).forEach(function(v, k) { payload[k] = v; });
+    payload.page_url = location.origin + location.pathname;
+    payload.elapsed_ms = Date.now() - Number(form.dataset.loadedAt || Date.now());
+    var tsId = _nhLeadTs.get(form);
+    if (window.turnstile && tsId != null) {
+        var token = window.turnstile.getResponse(tsId);
+        if (!token) return null;
+        payload['cf-turnstile-response'] = token;
+    }
+    return payload;
+}
+
+function nhLeadResetCaptcha(form) {
+    var tsId = _nhLeadTs.get(form);
+    if (window.turnstile && tsId != null) window.turnstile.reset(tsId);
+}
+
+function nhLeadPost(payload) {
+    return fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    }).then(function(res) {
+        return res.json().catch(function() { return {}; }).then(function(data) {
+            if (!res.ok) {
+                var err = new Error(data.error || 'Submission failed');
+                err.userMessage = (res.status === 400 || res.status === 429) ? data.error : null;
+                throw err;
+            }
+            return data;
+        });
+    });
+}
+
+/**
+ * AJAX lead form submission → /api/notify (Resend email + Supabase).
  */
 (function() {
     document.addEventListener('submit', function(e) {
@@ -463,30 +538,23 @@ function initPhotoSlider() {
 
         var btn = form.querySelector('.contact-form-submit');
         var originalText = btn ? btn.innerHTML : '';
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = 'Sending...';
-        }
 
         // Remove any existing messages
         var old = form.querySelector('.form-msg');
         if (old) old.remove();
 
-        var data = new FormData(form);
-        data.delete('_captcha'); // Captcha incompatible with AJAX
+        var payload = nhLeadPayload(form);
+        if (!payload) {
+            showMsg(form, 'error', 'Please check the "Verify you are human" box above the button.');
+            return;
+        }
 
-        // FormSubmit.co requires /ajax/ endpoint for JSON responses
-        var ajaxUrl = form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = 'Sending...';
+        }
 
-        fetch(ajaxUrl, {
-            method: 'POST',
-            body: data,
-            headers: { 'Accept': 'application/json' }
-        })
-        .then(function(res) {
-            if (!res.ok) throw new Error('Server error');
-            return res.json();
-        })
+        nhLeadPost(payload)
         .then(function() {
             form.reset();
             showMsg(form, 'success', 'Thank you! Your message has been sent. We\'ll get back to you shortly.');
@@ -499,10 +567,11 @@ function initPhotoSlider() {
                 }, 3000);
             }
         })
-        .catch(function() {
-            showMsg(form, 'error', 'Something went wrong. Please call us at <a href="tel:8634348893">(863) 434-8893</a> instead.');
+        .catch(function(err) {
+            showMsg(form, 'error', (err && err.userMessage ? err.userMessage : 'Something went wrong.') + ' Please call us at <a href="tel:8634348893">(863) 434-8893</a> instead.');
         })
         .finally(function() {
+            nhLeadResetCaptcha(form);
             if (btn) {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
