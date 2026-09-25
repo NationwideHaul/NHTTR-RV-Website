@@ -2189,6 +2189,14 @@ address {
     margin-left: var(--spacing-sm);
 }
 
+.google-reviews-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
 .google-reviews-grid {
     display: grid;
     grid-template-columns: 1fr;
