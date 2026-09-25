@@ -991,13 +991,17 @@ address {
 }
 
 .location-preview-map {
-    height: 200px;
+    height: 240px;
     width: 100%;
 }
 
 .location-preview-map iframe {
     width: 100%;
     height: 100%;
+}
+
+.location-directions {
+    margin-top: var(--spacing-sm);
 }
 
 .location-preview-info {
