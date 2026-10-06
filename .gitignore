@@ -7,3 +7,4 @@
 
 # Claude local config
 .claude/
+.vercel
