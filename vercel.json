@@ -1,0 +1,7 @@
+{
+  "redirects": [
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "www.nhrvrepair.com" }], "destination": "https://nhrvrepair.com/$1", "permanent": true },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "nhttr-rv-website.vercel.app" }], "destination": "https://nhrvrepair.com/$1", "permanent": true },
+    { "source": "/index.html", "destination": "/", "permanent": true }
+  ]
+}

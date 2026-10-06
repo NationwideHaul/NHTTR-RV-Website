@@ -3568,3 +3568,9 @@ address {
     font-weight: 700;
     text-decoration: underline;
 }
+/* SEO: visible freshness line under page H1 */
+.last-updated {
+    font-size: 0.85rem;
+    opacity: 0.75;
+    margin: 0.25rem 0 0.75rem;
+}
